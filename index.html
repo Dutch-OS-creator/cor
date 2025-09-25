@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clash Royale</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="splashScreen" class="splash-screen active">
+        <h1>Row B3rra's Games</h1>
+    </div>
+
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Loading Game...</p>
+    </div>
+
+    <div id="app" class="app-hidden">
+        <!-- Main Menu -->
+        <div id="mainMenu" class="screen active">
+            <div class="main-menu-top-bar">
+                <div id="profileIcon" class="profile-icon">
+                    <img src="https://images.websim.com/avatar/default_avatar" alt="Player Avatar">
+                    <div class="player-level-badge"><span id="playerLevel">1</span></div>
+                </div>
+                <div class="currency-bar">
+                    <div class="currency gold">💰 <span id="mainMenuGold">2450</span></div>
+                    <div class="currency gems">💎 <span id="mainMenuGems">50</span></div>
+                    <div class="currency star-points">⭐ <span id="mainMenuStarPoints">0</span></div>
+                </div>
+                <button id="adminBtn" class="menu-button-small" style="padding:8px 12px; font-size:0.9rem;">Admin</button>
+            </div>
+
+            <div class="menu-header">
+                <div class="player-info-main">
+                    <h2 class="username">Player</h2>
+                    <div class="trophies">🏆 <span id="playerTrophies">1250</span></div>
+                </div>
+                <div class="arena-progress">
+                    <div id="currentArenaInfo" class="arena-info">
+                        <!-- Arena info and progress will be rendered here -->
+                    </div>
+                    <div class="arena-bar">
+                        <div id="arenaProgressFill" class="arena-fill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-content">
+                <div class="total-crowns-display">👑 Total Crowns: <span id="playerTotalCrowns">0</span></div>
+                <button class="battle-btn" id="mainMenuBattleBtn">
+                    <span class="battle-btn-icon">⚔️</span>
+                    BATTLE
+                </button>
+                <div class="secondary-modes-container">
+                    <button class="secondary-mode-btn" data-action="showModesScreen">
+                        <div class="mode-icon">⚡️</div>
+                        <div class="mode-text">
+                            <h4>Game Modes</h4>
+                            <p>3x Elixir, Mega Draft & more!</p>
+                        </div>
+                    </button>
+                    <button class="secondary-mode-btn" data-action="showArenaSelection">
+                        <div class="mode-icon">🌍</div>
+                        <div class="mode-text">
+                            <h4>Arenas</h4>
+                            <p>Select your battleground</p>
+                        </div>
+                    </button>
+                </div>
+                <button id="arenaChestButton" class="menu-button-small" style="display:none;">
+                    <div class="card-icon" style="font-size: 2rem;">👑📦</div>
+                    <div class="card-title" style="font-size: 1.2rem; margin-top: 5px;">Arena Chest!</div>
+                </button>
+                <button id="starBoxMenu" class="battle-btn" style="display:none; background: linear-gradient(135deg, #8A2BE2, #9932CC);">
+                    <div class="card-icon" style="font-size: 2rem;">🟪⭐</div>
+                    <div class="card-title" style="font-size: 1.2rem; margin-top: 5px;">Star Box (Tap 4x)</div>
+                </button>
+            </div>
+            
+            <nav id="bottomNav">
+                <button class="nav-btn" data-action="showCards">
+                    <span class="nav-icon">🃏</span>
+                    <span class="nav-text">Cards</span>
+                </button>
+                <button class="nav-btn" data-action="showShop">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">Shop</span>
+                </button>
+                 <button class="nav-btn" data-action="showChests">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">Chests</span>
+                </button>
+                <button class="nav-btn" data-action="showBattlePass">
+                    <span class="nav-icon">🏆</span>
+                    <span class="nav-text">Pass</span>
+                </button>
+                <button class="nav-btn" data-action="showDeck">
+                    <span class="nav-icon">🎴</span>
+                    <span class="nav-text">Deck</span>
+                </button>
+                <button class="nav-btn" data-action="showNews">
+                    <span class="nav-icon">📰</span>
+                    <span class="nav-text">News</span>
+                </button>
+                <button id="settingsNavBtn" class="nav-btn" title="Settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Profile Screen -->
+        <div id="profileScreen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" data-action="showMainMenu">←</button>
+                <h2>Player Profile</h2>
+            </div>
+            <div class="profile-content">
+                <div class="profile-header">
+                    <div class="profile-avatar-container">
+                        <img id="profileAvatar" src="https://images.websim.com/avatar/default_avatar" alt="Player Avatar">
+                        <div class="profile-level-badge"><span id="profilePlayerLevel">1</span></div>
+                    </div>
+                    <div class="profile-user-info">
+                        <h3 id="profileUsername">Player</h3>
+                        <p id="profileJoinDate">Joined: Jan 2024</p>
+                    </div>
+                </div>
+                <div class="profile-stats-grid">
+                    <div class="profile-stat-card">
+                        <div class="stat-value" id="profileTrophies">1250</div>
+                        <div class="stat-label">🏆 Trophies</div>
+                    </div>
+                    <div class="profile-stat-card">
+                        <div class="stat-value" id="profileTotalCrowns">0</div>
+                        <div class="stat-label">👑 Total Crowns</div>
+                    </div>
+                    <div class="profile-stat-card">
+                        <div class="stat-value" id="profileCurrentArena">Goblin Stadium</div>
+                        <div class="stat-label">🌍 Current Arena</div>
+                    </div>
+                     <div class="profile-stat-card">
+                        <div class="stat-value" id="profileTotalWins">0</div>
+                        <div class="stat-label">⚔️ Wins</div>
+                    </div>
+                </div>
+                <div class="profile-deck-section">
+                    <h4>Current Battle Deck</h4>
+                    <div class="profile-current-deck" id="profileCurrentDeck">
+                        <!-- Current deck cards will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Battle Screen -->
+        <div id="battleScreen" class="screen">
+            <div class="battle-hud">
+                <div class="player-info top">
+                    <div class="player-details">
+                        <div id="enemyName" class="player-name">Enemy</div>
+                        <div class="player-trophies">🏆 1200</div>
+                    </div>
+                    <div class="tower-health-container">
+                        <div class="tower-hp-wrapper" id="enemy-tower-1-hp">
+                            <div class="tower-icon princess">🏰</div>
+                            <div class="hp-bar"><div class="hp-fill"></div></div>
+                        </div>
+                         <div class="tower-hp-wrapper" id="enemy-king-hp">
+                            <div class="tower-icon king">👑</div>
+                            <div class="hp-bar"><div class="hp-fill"></div></div>
+                        </div>
+                        <div class="tower-hp-wrapper" id="enemy-tower-2-hp">
+                            <div class="tower-icon princess">🏰</div>
+                            <div class="hp-bar"><div class="hp-fill"></div></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timer">3:00</div>
+                
+                <div class="player-info bottom">
+                     <div class="tower-health-container">
+                        <div class="tower-hp-wrapper" id="player-tower-1-hp">
+                            <div class="tower-icon princess">🏰</div>
+                            <div class="hp-bar"><div class="hp-fill"></div></div>
+                        </div>
+                         <div class="tower-hp-wrapper" id="player-king-hp">
+                            <div class="tower-icon king">👑</div>
+                            <div class="hp-bar"><div class="hp-fill"></div></div>
+                        </div>
+                        <div class="tower-hp-wrapper" id="player-tower-2-hp">
+                            <div class="tower-icon princess">🏰</div>
+                            <div class="hp-bar"><div class="hp-fill"></div></div>
+                        </div>
+                    </div>
+                    <div class="player-details">
+                        <div id="playerName" class="player-name">You</div>
+                        <div class="player-trophies">🏆 1250</div>
+                    </div>
+                </div>
+            </div>
+            
+            <canvas id="battleCanvas"></canvas>
+            
+            <div class="battle-ui">
+                <div class="elixir-bar">
+                    <!-- Pips will be generated here by JS -->
+                </div>
+                <div class="elixir-count-display">
+                    <span id="elixirCount">5</span> / 10
+                </div>
+                
+                <div class="card-hand-container">
+                    <div class="card-hand">
+                        <!-- Cards will be dynamically generated here, with new structure -->
+                    </div>
+                    <div class="next-card-preview">
+                        <div class="next-card-label">Next</div>
+                        <div id="nextCard" class="card small">
+                            <div class="card-cost-banner"><span class="card-cost">?</span></div>
+                            <div class="card-art">?</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="emote-bar">
+                <button class="emote-btn" data-emote="cry">😭👑</button>
+                <button class="emote-btn" data-emote="laugh">😆👑</button>
+                <button class="emote-btn" data-emote="mad">😡👑</button>
+                <button class="emote-btn" data-emote="thumbs">👍👑</button>
+            </div>
+        </div>
+
+        <!-- Victory Screen -->
+        <div id="victoryScreen" class="screen">
+            <div class="victory-content">
+                <h2 id="victoryTitle">Victory!</h2>
+                <div class="victory-stats">
+                    <div class="crowns">👑 +1</div>
+                    <div class="trophies">🏆 +30</div>
+                </div>
+                <div id="victoryTrophyAnimation" class="trophy-animation-container">🏆</div>
+                <div class="chest-reward">
+                    <div class="chest-icon">📦</div>
+                    <div class="chest-name">Silver Chest</div>
+                </div>
+                <div id="starBox" class="chest-reward" style="cursor:pointer; display:none;">
+                    <div class="chest-icon">🟪⭐</div>
+                    <div class="chest-name">Star Box (tap 4x)</div>
+                </div>
+                <button class="continue-btn" id="victoryContinueBtn">Continue</button>
+            </div>
+        </div>
+
+        <!-- Chests Screen -->
+        <div id="chestsScreen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" data-action="showMainMenu">←</button>
+                <h2>Chests</h2>
+            </div>
+            <div class="chest-slots" id="chestSlots">
+                <!-- Chests will be rendered here dynamically -->
+            </div>
+            <div id="chestQueueInfo" class="chest-queue-info" style="display: none;">
+                <!-- This is now hidden as there is no queue -->
+            </div>
+            <div id="chestRewardsModal" class="modal chest-opening-modal">
+                <div class="modal-content">
+                    <h3 id="chestRewardsTitle">Opening Chest...</h3>
+                    <div class="chest-opening-area">
+                        <div id="chestOpeningVisual" class="chest-visual-large">📦</div>
+                        <div id="chestOpeningTapArea" class="tap-area">Tap to reveal</div>
+                    </div>
+                    <div id="revealedRewardsContainer" class="revealed-rewards">
+                        <!-- Revealed rewards will appear here -->
+                    </div>
+                    <button class="continue-btn" id="closeChestRewardsModalBtn" style="display: none;">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards Screen -->
+        <div id="cardsScreen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" data-action="showMainMenu">←</button>
+                <h2>Cards</h2>
+            </div>
+            <!-- NEW: Evolution Slot -->
+            <div id="evoSlotContainer">
+                <h3>Evolution Slot</h3>
+                <div id="equippedEvoCard" class="evo-slot">
+                    <div class="evo-slot-placeholder">Equip an unlocked Evolution card here</div>
+                </div>
+            </div>
+            <div class="card-collection" id="cardCollection">
+                <!-- Cards will be rendered here dynamically -->
+            </div>
+            <!-- Card Detail Modal -->
+            <div id="cardDetailModal" class="modal">
+                <div class="modal-content">
+                    <button class="close-btn" id="closeCardDetailsModalBtn">×</button>
+                    <div id="cardDetailContent">
+                        <!-- Card details will be loaded here -->
+                    </div>
+                    <!-- NEW: Evolution Details Section -->
+                    <div id="cardEvoContent" class="card-evo-info">
+                        <!-- Evolution details will be loaded here -->
+                    </div>
+                    <div id="cardUpgradeAnimation" class="card-upgrade-animation-overlay">
+                        <div class="upgrade-flame"></div>
+                        <div class="upgrade-text">LEVEL UP!</div>
+                        <div class="upgrade-sparks"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deck Editor Screen -->
+        <div id="deckScreen" class="screen">
+          <div class="screen-header">
+            <button class="back-btn" data-action="showMainMenu">←</button>
+            <h2>Deck Editor</h2>
+          </div>
+          <div class="deck-editor-container">
+            <div class="deck-info-bar">
+                <div class="avg-elixir" id="avgElixirDisplay">Avg Elixir: 0.0</div>
+            </div>
+            <div class="current-deck-container">
+                <h3>Your Battle Deck</h3>
+                <div class="current-deck" id="currentDeck">
+                    <!-- 8 deck slots will be rendered here by JS -->
+                </div>
+            </div>
+            <div class="deck-actions">
+              <button class="deck-battle-btn" id="deckStartBattleBtn">
+                <span class="deck-battle-btn-icon">⚔️</span>
+                BATTLE
+              </button>
+            </div>
+            <div class="available-cards-container">
+                <h3>Card Collection</h3>
+                <div class="available-cards" id="availableCards">
+                  <!-- All owned cards will be rendered here by JS -->
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Battle Pass Screen -->
+        <div id="battlePassScreen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" data-action="showMainMenu">←</button>
+                <h2>Witch Royale Pass (Season of the Undead)</h2>
+            </div>
+            <div class="pass-progress-container">
+                <div class="pass-current-level">Level <span id="bpCurrentLevel">1</span></div>
+                <div class="pass-progress-bar">
+                    <div id="bpProgressBar" class="pass-progress-fill"></div>
+                </div>
+                <div class="pass-points"><span id="bpPoints">0</span> / <span id="bpNeeded">100</span> Points</div>
+            </div>
+            <div class="pass-tracks">
+                <div class="premium-unlock-section" id="premiumUnlockSection">
+                    <!-- Button will be rendered here -->
+                </div>
+                <div class="pass-rewards-grid-container">
+                    <div class="pass-track free-track" id="freeTrack">
+                        <h3>Free Rewards</h3>
+                        <div class="rewards-scroll-area">
+                            <!-- Free rewards will be rendered here dynamically -->
+                        </div>
+                    </div>
+                    <div class="pass-track premium-track" id="premiumTrack">
+                        <h3>Premium Rewards</h3>
+                        <div class="rewards-scroll-area">
+                            <!-- Premium rewards will be rendered here dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shop Screen -->
+        <div id="shopScreen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" data-action="showMainMenu">←</button>
+                <h2>Shop</h2>
+            </div>
+            <div class="shop-content">
+                <div class="shop-timer" id="shopRefreshTimer">Shop refreshes in: 00:00:00</div>
+                <div class="shop-offers-grid" id="shopOffersGrid">
+                    <!-- Shop offers will be rendered here dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Arena Selection Screen -->
+        <div id="arenaSelectionScreen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" data-action="showMainMenu">←</button>
+                <h2>Select Arena</h2>
+            </div>
+            <div class="arena-selection-content">
+                <div class="arena-selection-grid" id="arenaSelectionGrid">
+                    <!-- Arena cards will be rendered here dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modes Screen -->
+        <div id="modesScreen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" data-action="showMainMenu">←</button>
+                <h2>Game Modes</h2>
+            </div>
+            <div class="modes-content">
+                <button class="mode-select-btn" id="modesSandboxBtn">
+                    <div class="mode-select-icon">⚡️</div>
+                    <div class="mode-select-text">
+                        <h3>3x Elixir Sandbox</h3>
+                        <p>Unleash chaos with triple elixir generation!</p>
+                    </div>
+                </button>
+                <button class="mode-select-btn" id="modesMegaDraftBtn">
+                    <div class="mode-select-icon">🔄</div>
+                    <div class="mode-select-text">
+                        <h3>Mega Draft</h3>
+                        <p>Draft your deck against your opponent!</p>
+                    </div>
+                </button>
+                <button class="mode-select-btn" id="modesInfiniteElixirBtn">
+                    <div class="mode-select-icon">♾️</div>
+                    <div class="mode-select-text">
+                        <h3>Infinite Elixir</h3>
+                        <p>Go crazy! Elixir is unlimited.</p>
+                    </div>
+                </button>
+                <!-- NEW: Sudden Death Mode Button -->
+                <button class="mode-select-btn" id="modesSuddenDeathBtn">
+                    <div class="mode-select-icon">⏱️</div>
+                    <div class="mode-select-text">
+                        <h3>Sudden Death</h3>
+                        <p>First tower down wins!</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    
+        <!-- Mega Draft Screen -->
+        <div id="draftScreen" class="screen">
+            <div class="screen-header">
+                <h2>Mega Draft</h2>
+            </div>
+            <div id="draftContent" class="draft-content">
+                <div id="draftInstructions" class="draft-instructions">Choose a card!</div>
+                <div id="draftChoices" class="draft-choices">
+                    <!-- Card choices will be rendered here -->
+                </div>
+                <div class="draft-decks-preview">
+                    <div class="draft-deck-preview" id="playerDraftDeck">
+                        <h4>Your Deck</h4>
+                        <div class="deck-slots"></div>
+                    </div>
+                    <div class="draft-deck-preview" id="enemyDraftDeck">
+                        <h4>Enemy's Deck</h4>
+                        <div class="deck-slots"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Screen -->
+        <div id="newsScreen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" data-action="showMainMenu">←</button>
+                <h2>Clash News</h2>
+            </div>
+            <div id="newsContent" class="news-content">
+                <!-- News items rendered here -->
+            </div>
+        </div>
+
+        <!-- Daily Reward Modal -->
+        <div id="dailyRewardScreen" class="screen">
+            <div class="daily-reward-container">
+                <h2 class="daily-reward-title">Daily Rewards</h2>
+                <p class="daily-reward-subtitle">Come back every day for a new reward!</p>
+                <div id="dailyRewardTrack" class="daily-reward-track">
+                    <!-- 7 reward items will be rendered here by JS -->
+                </div>
+                <div class="daily-reward-actions">
+                    <button id="claimDailyRewardBtn" class="claim-button" disabled>Claim Reward</button>
+                    <button id="closeDailyRewardScreenBtn" class="close-button" style="display: none;">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Password Modal -->
+        <div id="adminPasswordModal" class="modal">
+          <div class="modal-content">
+            <h3>Admin Login</h3>
+            <input id="adminPasswordInput" type="password" placeholder="Enter password" style="margin:10px 0; width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;">
+            <button id="adminPasswordSubmit" class="continue-btn" style="width:100%;">Unlock</button>
+          </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settingsModal" class="modal">
+          <div class="modal-content">
+            <h3>Settings</h3>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+              <div style="text-align:left; font-size:0.95rem; color:#333;">Account: <strong id="settingsAccountName">—</strong></div>
+              <button id="logoutBtn" class="menu-button-small" style="background:linear-gradient(135deg,#ff6b6b,#c0392b);">Log out</button>
+              <button id="closeSettingsBtn" class="continue-btn" style="background:linear-gradient(135deg,#66bb6a,#43a047);">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login / Account Modal -->
+        <div id="accountModal" class="modal">
+          <div class="modal-content">
+            <h3 id="accountModalTitle">Sign In</h3>
+            <div id="accountForms">
+              <div id="loginForm" style="display:block;">
+                <input id="loginUsername" type="text" placeholder="Username" style="margin:6px 0; width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;">
+                <input id="loginPassword" type="password" placeholder="Password" style="margin:6px 0; width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;">
+                <button id="loginSubmit" class="continue-btn" style="width:100%; margin-top:6px;">Sign In</button>
+                <div style="margin-top:8px; text-align:center;">
+                  <a href="#" id="showCreateAccount">Create account</a>
+                </div>
+              </div>
+              <div id="createForm" style="display:none;">
+                <input id="createUsername" type="text" placeholder="Choose a username" style="margin:6px 0; width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;">
+                <input id="createPassword" type="password" placeholder="Choose a password" style="margin:6px 0; width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;">
+                <button id="createSubmit" class="continue-btn" style="width:100%; margin-top:6px;">Create Account</button>
+                <div style="margin-top:8px; text-align:center;">
+                  <a href="#" id="showLogin">Already have an account?</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Panel Modal -->
+        <div id="adminPanelModal" class="modal">
+          <div class="modal-content">
+            <h3>Admin Panel</h3>
+            <div style="display:grid; gap:8px; margin-top:10px;">
+              <button onclick="adminGrantGold(10000)" class="menu-button-small">+10,000 Gold</button>
+              <button onclick="adminGrantGems(1000)" class="menu-button-small" style="background:linear-gradient(135deg,#8A2BE2,#9932CC);">+1,000 Gems</button>
+              <button onclick="adminGiveChest('gold')" class="menu-button-small">Give Gold Chest</button>
+              <button onclick="adminUnlockAllArenas()" class="menu-button-small">Unlock All Arenas</button>
+              <button onclick="adminTogglePremium()" class="menu-button-small">Toggle Premium Pass</button>
+              <!-- NEW: Admin-only cards -->
+              <div style="display:flex; gap:8px; align-items:center; justify-content:center;">
+                <select id="adminCardSelect" style="padding:8px; border-radius:8px;">
+                  <option value="mega-knight">Mega Knight</option>
+                  <option value="pekka">P.E.K.K.A</option>
+                  <option value="dark-miner">Dark Miner</option>
+                  <option value="royal-ghost">Royal Ghost</option>
+                  <option value="bowler">Bowler</option>
+                  <option value="rowan">Rowan (Admin Only)</option>
+                </select>
+              </div>
+              <!-- Dedicated Rowan grant button -->
+              <div style="display:flex; gap:8px; align-items:center; justify-content:center; margin-top:6px;">
+                <button onclick="adminGrantAdminCardSelf('rowan')" class="menu-button-small" style="background:linear-gradient(135deg,#FFD700,#FF8C00);">give rowan the best card in the game</button>
+              </div>
+              <!-- NEW: Targeted grant sections -->
+              <div style="display:grid; gap:6px; padding:8px; border:1px solid #ddd; border-radius:10px; background:#fff;">
+                <strong>Grant Admin Card</strong>
+                <div style="display:flex; gap:8px; align-items:center; justify-content:center;">
+                  <button onclick="adminGrantAdminCardSelf(document.getElementById('adminCardSelect').value)" class="menu-button-small">Give to Myself</button>
+                  <button onclick="adminGrantAdminCardAll(document.getElementById('adminCardSelect').value)" class="menu-button-small">Give to All</button>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center; justify-content:center;">
+                  <input id="adminTargetPlayer" type="text" placeholder="Username or Client ID" style="flex:1; padding:8px; border-radius:8px; border:1px solid #ccc;">
+                  <button onclick="adminGrantAdminCardTo(document.getElementById('adminCardSelect').value, document.getElementById('adminTargetPlayer').value)" class="menu-button-small">Give to Specific</button>
+                </div>
+              </div>
+              <!-- NEW: Elixir Cheat Section -->
+              <div style="display:grid; gap:6px; padding:8px; border:1px solid #ddd; border-radius:10px; background:#fff;">
+                <strong>Elixir Cheat</strong>
+                <div style="display:flex; gap:8px; align-items:center; justify-content:center;">
+                  <input id="adminElixirAmount" type="number" placeholder="Amount" style="width:100px; padding:8px; border-radius:8px; border:1px solid #ccc;">
+                  <button onclick="adminGrantElixir(document.getElementById('adminElixirAmount').value)" class="menu-button-small">Add Elixir</button>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center; justify-content:center;">
+                  <button onclick="adminSetMaxElixir()" class="menu-button-small">Set Max Elixir</button>
+                  <button onclick="adminToggleInfiniteElixir()" class="menu-button-small" style="background:linear-gradient(135deg,#8A2BE2,#9932CC);">Toggle Infinite Elixir</button>
+                </div>
+              </div>
+              <!-- NEW: Star Box Admin Section -->
+              <div style="display:grid; gap:6px; padding:8px; border:1px solid #ddd; border-radius:10px; background:#fff;">
+                <strong>Star Box Admin</strong>
+                <div style="display:flex; gap:8px; align-items:center; justify-content:center;">
+                  <button onclick="adminGrantStarBox(1)" class="menu-button-small">Give 1 Star Box</button>
+                  <button onclick="adminGrantStarBox(5)" class="menu-button-small" style="background:linear-gradient(135deg,#FFD700,#FFA500);">Give 5 Star Boxes</button>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center; justify-content:center;">
+                  <input id="adminSetStarBoxCount" type="number" placeholder="Set Count" style="width:120px; padding:8px; border-radius:8px; border:1px solid #ccc;">
+                  <button onclick="adminSetStarBoxes(document.getElementById('adminSetStarBoxCount').value)" class="menu-button-small">Set Star Boxes</button>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; margin-top:12px; justify-content:center; align-items:center;">
+              <button id="adminLogoutBtn" class="menu-button-small" style="background:linear-gradient(135deg,#e74c3c,#c0392b);">Admin Log Out</button>
+              <button id="adminClosePanel" class="continue-btn">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
