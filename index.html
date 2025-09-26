@@ -609,8 +609,104 @@
               </div>
             </div>
             <div style="display:flex; gap:8px; margin-top:12px; justify-content:center; align-items:center;">
+              <button id="adminOpenCardCreator" class="menu-button-small" style="background:linear-gradient(135deg,#2196F3,#1976D2);">Card Creator</button>
               <button id="adminLogoutBtn" class="menu-button-small" style="background:linear-gradient(135deg,#e74c3c,#c0392b);">Admin Log Out</button>
               <button id="adminClosePanel" class="continue-btn">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Card Creator Modal -->
+        <div id="cardCreatorModal" class="modal">
+          <div class="modal-content" style="max-width:900px; width:100%; height:90vh; display:flex; gap:12px; padding:18px; align-items:stretch;">
+            <div style="flex:1; overflow:auto;">
+              <h3>Create New Card</h3>
+              <label>Card ID (unique)</label>
+              <input id="cc_id" style="width:100%; padding:8px; margin:6px 0;"/>
+              <label>Display Name</label>
+              <input id="cc_name" style="width:100%; padding:8px; margin:6px 0;"/>
+              <label>Type (troop/spell/building)</label>
+              <select id="cc_type" style="width:100%; padding:8px; margin:6px 0;">
+                <option value="troop">troop</option>
+                <option value="spell">spell</option>
+                <option value="building">building</option>
+              </select>
+              <label>Behavior / Subtype</label>
+              <select id="cc_create_as" style="width:100%; padding:8px; margin:6px 0;">
+                <option value="default">Default</option>
+                <optgroup label="Troop Options">
+                  <option value="swarm">Spawn Swarm (multiple units)</option>
+                  <option value="single">Single Unit</option>
+                  <option value="flying">Flying Unit</option>
+                </optgroup>
+                <optgroup label="Spell Options">
+                  <option value="area-damage">Area Damage</option>
+                  <option value="summon-troop">Summon Troop</option>
+                  <option value="targeted">Targeted Effect</option>
+                </optgroup>
+                <optgroup label="Building Options">
+                  <option value="spawner">Spawner (periodic spawn)</option>
+                  <option value="defensive">Defensive Building</option>
+                </optgroup>
+              </select>
+              <label>Cost</label>
+              <input id="cc_cost" type="number" min="0" value="1" style="width:100%; padding:8px; margin:6px 0;"/>
+              <label>HP</label>
+              <input id="cc_hp" type="number" min="0" value="100" style="width:100%; padding:8px; margin:6px 0;"/>
+              <label>Damage</label>
+              <input id="cc_damage" type="number" min="0" value="10" style="width:100%; padding:8px; margin:6px 0;"/>
+              <label>Range</label>
+              <input id="cc_range" type="number" min="0" value="1" style="width:100%; padding:8px; margin:6px 0;"/>
+              <label>Spawn Settings (for spawners / summons)</label>
+              <input id="cc_spawn_card" placeholder="spawn card id (e.g. skeletons)" style="width:100%; padding:8px; margin:6px 0;"/>
+              <div style="display:flex; gap:8px;">
+                <input id="cc_spawn_count" type="number" min="0" value="1" style="flex:1; padding:8px; margin:6px 0;" placeholder="spawn count"/>
+                <input id="cc_spawn_interval" type="number" min="0" value="1500" style="flex:1; padding:8px; margin:6px 0;" placeholder="spawn interval ms"/>
+              </div>
+              <label>Death Spawn (optional)</label>
+              <div style="display:flex; gap:8px;">
+                <input id="cc_spawn_on_death" placeholder="card id on death" style="flex:2; padding:8px; margin:6px 0;"/>
+                <input id="cc_spawn_on_death_count" type="number" min="0" value="0" style="flex:1; padding:8px; margin:6px 0;" placeholder="count"/>
+              </div>
+              <label>Speed</label>
+              <input id="cc_speed" type="number" min="0" value="1" style="width:100%; padding:8px; margin:6px 0;"/>
+              <label>Spell / AoE Settings (for spells)</label>
+              <div style="display:flex; gap:8px;">
+                <input id="cc_radius" type="number" min="0" value="2.5" style="flex:1; padding:8px; margin:6px 0;" placeholder="radius (tiles)"/>
+                <input id="cc_duration" type="number" min="0" value="5000" style="flex:1; padding:8px; margin:6px 0;" placeholder="duration ms"/>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <input id="cc_dps" type="number" min="0" value="0" style="flex:1; padding:8px; margin:6px 0;" placeholder="damage/sec"/>
+                <input id="cc_tick_rate" type="number" min="0" value="1000" style="flex:1; padding:8px; margin:6px 0;" placeholder="tick ms"/>
+              </div>
+              <label>Rarity (common/rare/epic/legendary/mythic)</label>
+              <input id="cc_rarity" value="common" style="width:100%; padding:8px; margin:6px 0;"/>
+              <label>Emoji</label>
+              <input id="cc_emoji" value="🃏" style="width:100%; padding:8px; margin:6px 0;"/>
+              <div style="display:flex; gap:8px; margin-top:8px;">
+                <button id="cc_preview_btn" class="menu-button-small">Preview</button>
+                <button id="cc_save_btn" class="menu-button-small" style="background:linear-gradient(135deg,#66bb6a,#43a047);">Create & Grant</button>
+                <button id="cc_cancel_btn" class="menu-button-small" style="background:linear-gradient(135deg,#e74c3c,#c0392b);">Cancel</button>
+              </div>
+            </div>
+            <div style="width:340px; background:rgba(0,0,0,0.04); border-radius:8px; padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start;">
+              <h4 style="margin-top:4px;">Live Preview</h4>
+              <div id="cc_preview_card" class="card-item" style="width:260px; height:420px; display:flex; flex-direction:column; align-items:center; padding:12px; margin-top:8px;">
+                <div class="card-item-visual" id="cc_preview_emoji" style="font-size:6rem;">🃏</div>
+                <div class="card-item-info" style="width:100%;">
+                  <div class="card-level" id="cc_preview_name" style="font-size:1.4rem; font-weight:800;">New Card</div>
+                  <div class="card-item-stats" style="margin-top:8px;">
+                    <span id="cc_preview_cost">Cost: 1</span>
+                    <span id="cc_preview_rarity">common</span>
+                  </div>
+                  <div style="margin-top:10px;">
+                    <div>HP: <span id="cc_preview_hp">100</span></div>
+                    <div>DMG: <span id="cc_preview_dmg">10</span></div>
+                    <div>Range: <span id="cc_preview_range">1</span></div>
+                    <div>Speed: <span id="cc_preview_speed">1</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

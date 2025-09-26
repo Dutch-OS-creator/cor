@@ -2532,9 +2532,10 @@ export function attachGlobalEventListeners() {
         else document.getElementById('adminPasswordModal').style.display = 'flex';
     });
     document.getElementById('adminPasswordSubmit')?.addEventListener('click', tryAdminUnlock);
-    document.getElementById('adminClosePanel')?.addEventListener('click', () => {
-        document.getElementById('adminPanelModal').style.display = 'none';
-    });
+    document.getElementById('adminOpenCardCreator')?.addEventListener('click', showCardCreator);
+    document.getElementById('cc_preview_btn')?.addEventListener('click', updateCardPreview);
+    document.getElementById('cc_cancel_btn')?.addEventListener('click', closeCardCreator);
+    document.getElementById('cc_save_btn')?.addEventListener('click', createCardFromForm);
     // Settings button opens settings modal
     document.getElementById('settingsNavBtn')?.addEventListener('click', () => {
         const modal = document.getElementById('settingsModal');
@@ -2556,7 +2557,6 @@ export function attachGlobalEventListeners() {
     // NEW: Daily Reward Modal claim button
     document.getElementById('claimDailyRewardBtn')?.addEventListener('click', claimDailyReward);
     document.getElementById('closeDailyRewardScreenBtn')?.addEventListener('click', showMainMenu);
-
 
     // NEW: Arena Selection Grid - event listeners will be added dynamically by renderArenaSelection
     // But we can add a delegated listener for future-proof
@@ -2986,4 +2986,138 @@ function adminGrantAllZeroElixir(){
   saveGame();
   updateMainMenuDisplay();
   alert('Granted every card locally and set their cost to 0 elixir (admin test grants).');
+}
+
+// Add card creator functions near the end of file (before exposeUIToWindow or after admin helpers)
+export function showCardCreator(){
+  const modal = document.getElementById('cardCreatorModal');
+  if (!modal) return alert('Card Creator unavailable');
+  // reset fields
+  ['cc_id','cc_name','cc_cost','cc_hp','cc_damage','cc_range','cc_speed','cc_rarity','cc_emoji'].forEach(id=> {
+    const el = document.getElementById(id);
+    if (el) {
+      if (id==='cc_cost') el.value = 1;
+      else if (id==='cc_hp') el.value = 100;
+      else if (id==='cc_damage') el.value = 10;
+      else if (id==='cc_range') el.value = 1;
+      else if (id==='cc_speed') el.value = 1;
+      else if (id==='cc_rarity') el.value = 'common';
+      else if (id==='cc_emoji') el.value = '🃏';
+      else el.value = '';
+    }
+  });
+  updateCardPreview();
+  modal.style.display = 'flex';
+}
+
+export function closeCardCreator(){
+  const modal = document.getElementById('cardCreatorModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function updateCardPreview(){
+  const id = (document.getElementById('cc_id')?.value || '').trim();
+  const name = (document.getElementById('cc_name')?.value || 'New Card');
+  const emoji = (document.getElementById('cc_emoji')?.value || '🃏');
+  const cost = (document.getElementById('cc_cost')?.value || '0');
+  const hp = (document.getElementById('cc_hp')?.value || '0');
+  const dmg = (document.getElementById('cc_damage')?.value || '0');
+  const range = (document.getElementById('cc_range')?.value || '0');
+  const speed = (document.getElementById('cc_speed')?.value || '0');
+  const rarity = (document.getElementById('cc_rarity')?.value || 'common');
+
+  const spawnCard = (document.getElementById('cc_spawn_card')?.value || '');
+  const spawnCount = (document.getElementById('cc_spawn_count')?.value || '0');
+  const spawnInterval = (document.getElementById('cc_spawn_interval')?.value || '0');
+  const spawnOnDeath = (document.getElementById('cc_spawn_on_death')?.value || '');
+  const spawnOnDeathCount = (document.getElementById('cc_spawn_on_death_count')?.value || '0');
+  const radius = (document.getElementById('cc_radius')?.value || '0');
+  const duration = (document.getElementById('cc_duration')?.value || '0');
+  const dps = (document.getElementById('cc_dps')?.value || '0');
+  const tickRate = (document.getElementById('cc_tick_rate')?.value || '0');
+
+  document.getElementById('cc_preview_emoji').textContent = emoji;
+  document.getElementById('cc_preview_name').textContent = name;
+  document.getElementById('cc_preview_cost').textContent = `Cost: ${cost}`;
+  document.getElementById('cc_preview_rarity').textContent = rarity;
+  document.getElementById('cc_preview_hp').textContent = hp;
+  document.getElementById('cc_preview_dmg').textContent = dmg;
+  document.getElementById('cc_preview_range').textContent = range;
+  document.getElementById('cc_preview_speed').textContent = speed;
+  // show advanced preview info
+  document.getElementById('cc_preview_card').querySelector('.card-item-info').innerHTML += `
+    <div style="margin-top:8px; font-size:0.85rem; text-align:left;">
+      ${spawnCard?`Summons: ${spawnCount}x ${spawnCard} every ${spawnInterval}ms<br>`:''}
+      ${spawnOnDeath?`On Death: ${spawnOnDeathCount}x ${spawnOnDeath}<br>`:''}
+      ${radius?`Radius: ${radius} tiles `:''}${duration?`• Dur: ${duration}ms<br>`:''}
+      ${dps?`DPS: ${dps} • Tick: ${tickRate}ms` : ''}
+    </div>
+  `;
+}
+
+function createCardFromForm(){
+  const id = (document.getElementById('cc_id')?.value || '').trim();
+  if (!id) return alert('Card ID required');
+  if (cardData[id] || allCards.find(c=>c.id===id)) {
+    if (!confirm('A card with this ID already exists — overwrite local definition?')) return;
+  }
+  const name = (document.getElementById('cc_name')?.value || id);
+  const type = (document.getElementById('cc_type')?.value || 'troop');
+  const subtype = (document.getElementById('cc_create_as')?.value || 'default');
+  const cost = Number(document.getElementById('cc_cost')?.value || 0);
+  const hp = Number(document.getElementById('cc_hp')?.value || 0);
+  const damage = Number(document.getElementById('cc_damage')?.value || 0);
+  const range = Number(document.getElementById('cc_range')?.value || 1);
+  const speed = Number(document.getElementById('cc_speed')?.value || 1);
+  const rarity = (document.getElementById('cc_rarity')?.value || 'common');
+  const emoji = (document.getElementById('cc_emoji')?.value || '🃏');
+
+  // Advanced options
+  const spawnCard = (document.getElementById('cc_spawn_card')?.value || '').trim() || undefined;
+  const spawnCount = Number(document.getElementById('cc_spawn_count')?.value || 0);
+  const spawnInterval = Number(document.getElementById('cc_spawn_interval')?.value || 0);
+  const spawnOnDeath = (document.getElementById('cc_spawn_on_death')?.value || '').trim() || undefined;
+  const spawnOnDeathCount = Number(document.getElementById('cc_spawn_on_death_count')?.value || 0);
+  const radius = Number(document.getElementById('cc_radius')?.value || 0);
+  const duration = Number(document.getElementById('cc_duration')?.value || 0);
+  const dps = Number(document.getElementById('cc_dps')?.value || 0);
+  const tickRate = Number(document.getElementById('cc_tick_rate')?.value || 0);
+
+  // Create minimal cardData entry
+  // store subtype into card definition so spells/buildings can specify behavior
+  cardData[id] = {
+    hp, damage, speed, range, attackSpeed: 1000, targets: 'both', rarity,
+    starPointValue: 1, goldenBoost: {hp:1.1, damage:1.1}, upgrade: [{cards:2,gold:50}],
+    type, cost, visualSize: 60, subtype,
+    // spawn / summon configuration
+    spawnCard: spawnCard,
+    spawnCount: spawnCount || undefined,
+    spawnInterval: spawnInterval || undefined,
+    // spawn on death
+    spawnOnDeath: spawnOnDeath,
+    spawnOnDeathCount: spawnOnDeathCount || undefined,
+    // spell / aoe config
+    radius: radius || undefined,
+    duration: duration || undefined,
+    damagePerSecond: dps || undefined,
+    tickRate: tickRate || undefined
+  };
+   // Add to allCards reference list for UI listings
+   const existingIndex = allCards.findIndex(c=>c.id===id);
+   const entry = { id, name, cost, type, emoji, rarity };
+   if (existingIndex === -1) allCards.push(entry); else allCards[existingIndex] = entry;
+
+   // Grant to player locally
+   if (!gameState.player.cards[id]) {
+    gameState.player.cards[id] = { id, name, cost, type, emoji, level:1, count:1, isGolden:false, rarity, subtype };
+  } else {
+    gameState.player.cards[id].count = (gameState.player.cards[id].count || 0) + 1;
+    gameState.player.cards[id].name = name;
+    gameState.player.cards[id].emoji = emoji;
+    gameState.player.cards[id].subtype = subtype;
+  }
+
+   saveGame(); updateMainMenuDisplay(); renderCardsCollection();
+   alert(`Card \"${name}\" created and granted locally.`);
+   closeCardCreator();
 }

@@ -133,8 +133,9 @@ export function drawAllTowers(ctx){
     const drawTower = (tw, color) => {
         if (tw.hp <= 0) return;
         ctx.save();
+        // Use slightly desaturated tones for better readability on white backgrounds
         ctx.fillStyle = color;
-        ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+        ctx.strokeStyle = 'rgba(0,0,0,0.18)';
         ctx.lineWidth = 3;
 
         const x = tw.x;
@@ -180,12 +181,13 @@ export function drawAllTowers(ctx){
             ctx.fillText('🏰', x, y);
         }
 
-        // Health Bar
+        // Health Bar - flatter style with subtle border
         const size = tw.king ? 50 : 40;
         const hpBarWidth = size + 10, hpBarHeight = 8, hpBarX = tw.x - hpBarWidth / 2, hpBarY = tw.y - (tw.king ? 45 : 40);
-        ctx.fillStyle = '#222'; ctx.fillRect(hpBarX, hpBarY, hpBarWidth, hpBarHeight);
-        ctx.fillStyle = '#4CAF50'; ctx.fillRect(hpBarX, hpBarY, hpBarWidth * (Math.max(tw.hp,0) / tw.maxHp), hpBarHeight);
-        ctx.strokeStyle = 'black';
+        ctx.fillStyle = 'rgba(0,0,0,0.06)'; ctx.fillRect(hpBarX, hpBarY, hpBarWidth, hpBarHeight);
+        ctx.fillStyle = '#22c55e'; // pleasant green
+        ctx.fillRect(hpBarX, hpBarY, hpBarWidth * (Math.max(tw.hp,0) / tw.maxHp), hpBarHeight);
+        ctx.strokeStyle = 'rgba(0,0,0,0.06)';
         ctx.lineWidth = 1;
         ctx.strokeRect(hpBarX, hpBarY, hpBarWidth, hpBarHeight);
         
@@ -277,7 +279,7 @@ export function renderBattle(){
 
   // NEW: Animated river highlights for "royale" feel
   const t = performance.now() * 0.002;
-  ctx.save(); ctx.globalAlpha = 0.15; ctx.fillStyle = '#BBDEFB';
+  ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = '#E6F2FF';
   for (let i = 0; i < 6; i++) {
     const offset = ((i * 150) + (t * 60)) % (canvas.width + 200) - 100;
     ctx.fillRect(offset, BRIDGES.riverY()-18, 80, 6);
@@ -566,12 +568,12 @@ export function renderBattle(){
     if (['golemite'].includes(t.type)) { unitRadius = 22; emojiFontSize = '22px'; }
     if (['skeletons','skeleton-army'].includes(t.type)) { unitRadius = 10; emojiFontSize = '14px'; }
     // NEW: Soft shadow under troops
-    ctx.save(); ctx.globalAlpha = 0.25; ctx.fillStyle = 'black';
+    ctx.save(); ctx.globalAlpha = 0.25; ctx.fillStyle = 'rgba(0,0,0,0.18)';
     ctx.beginPath(); ctx.ellipse(t.x, t.y + Math.max(3, unitRadius*0.2), unitRadius*0.9, unitRadius*0.45, 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
-    ctx.fillStyle = t.owner==='player' ? '#2196F3' : '#F44336';
+    ctx.fillStyle = t.owner==='player' ? '#2563EB' : '#DC2626'; // slightly toned blues/reds
     ctx.beginPath(); ctx.arc(t.x,t.y,unitRadius,0,Math.PI*2); ctx.fill();
-    // NEW: Team-colored outer ring for better visibility
-    ctx.strokeStyle = t.owner==='player' ? 'rgba(0, 100, 255, 0.8)' : 'rgba(255, 50, 50, 0.8)';
+    // NEW: Team-colored outer ring for subtle visibility
+    ctx.strokeStyle = t.owner==='player' ? 'rgba(37,99,235,0.7)' : 'rgba(220,38,38,0.7)';
     ctx.lineWidth = 3;
     ctx.stroke();
 
@@ -639,8 +641,8 @@ export function renderBattle(){
     // Render Freeze effect on troops
     if (t.isFrozen && performance.now() < t.frozenUntil) {
         ctx.save();
-        ctx.globalAlpha = 0.5;
-        ctx.fillStyle = 'lightblue';
+        ctx.globalAlpha = 0.45;
+        ctx.fillStyle = 'rgba(96,165,250,0.6)';
         ctx.beginPath();
         ctx.arc(t.x, t.y, unitRadius * 1.2, 0, Math.PI * 2);
         ctx.fill();
